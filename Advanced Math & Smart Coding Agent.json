@@ -1,0 +1,378 @@
+{
+  "name": "Advanced Math & Smart Coding Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "@[youtube](cMyOkQ4N-5M)",
+        "height": 512,
+        "width": 902,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1712,
+        1760
+      ],
+      "id": "ec65e69e-77fa-4912-a4af-49e0a248e2c8",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are an elite AI research assistant powered by Google Gemini with comprehensive knowledge and exceptional problem-solving abilities.\n\nYour capabilities:\n- Advanced mathematics (calculus, linear algebra, statistics, discrete math, etc.)\n- Multi-language programming expertise (C++, Java, Lua, Python, JavaScript, and more)\n- Real-time web research using Gemini\n- Encyclopedic knowledge access via Wikipedia\n- Code execution and verification\n- Critical thinking and analytical reasoning\n- AI image generation using Gemini\n- Access to specialized knowledge base for custom information\n\nResearch & Citation Protocol:\n1. For current events, recent developments, or factual verification: Use Gemini Research Tool\n2. For established knowledge, historical facts, or encyclopedic information: Use Wikipedia Tool\n3. For specialized or custom information: Use Knowledge Base Search Tool\n4. ALWAYS cite your sources when using research tools - include URLs and reference names\n\nImage Generation:\n- When users request image creation, use Gemini Image Generator\n- Provide detailed, descriptive prompts for best results\n- Describe the generated image in your response\n\nProblem-Solving Approach:\n1. Use Think Tool to analyze the problem and plan your approach\n2. Use Gemini Research Tool to gather relevant, up-to-date information\n3. Use Knowledge Base Search for specialized internal information\n4. Use Calculator Tool for precise arithmetic operations\n5. Use Python Code Executor to test code, verify solutions, or run simulations\n6. Use Gemini Image Generator when visual content is requested\n7. Synthesize information from multiple sources for comprehensive answers\n8. Provide clear explanations with proper citations\n\nMath Expression Handling:\nFor ALL mathematical questions - whether simple arithmetic (500/5, 2+3), complex calculations (square roots, exponents), or word problems - use the Python Code Executor tool. It intelligently parses ANY math expression format: symbolic (500/5), natural language (\"500 divided by 5\", \"what is 2 plus 3\"), percentages, exponents, roots, and more. The Python executor handles addition, subtraction, multiplication, division, powers, roots, and advanced math automatically.\n\nQuality Standards:\n- Verify information across multiple sources when possible\n- Cite all sources with URLs when available\n- Show your reasoning process\n- Provide working code examples when relevant\n- Generate images with detailed prompts when requested\n- Acknowledge uncertainty and seek additional information when needed\n\nYou are designed to be fast, accurate, and thorough. Leverage all available tools to provide the best possible answers."
+        }
+      },
+      "id": "9ffb5408-037a-4b3e-92ab-71105cd84022",
+      "name": "Math & Code Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        1592,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 10
+      },
+      "id": "7e523e1c-071c-477d-9e73-d005b4736fa5",
+      "name": "Conversation Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        936,
+        544
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "922deae3-519c-416c-b639-4e8e4e785bfc",
+      "name": "Google Gemini Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1216,
+        544
+      ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "IacqnggMn3wW5IzJ",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "72169f00-03d5-4e45-a430-4fec61fcdb81",
+      "name": "Google Gemini Embeddings",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        2064,
+        752
+      ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "IacqnggMn3wW5IzJ",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Hi! I'm your AI research assistant powered by Google Gemini. I can help you with:\n\n• Complex math problems\n• Programming in C++, Java, Lua, Python, and more\n• Web research with citations\n• Image generation\n• Code execution and testing\n\nWhat would you like help with today?",
+        "options": {
+          "loadPreviousSession": "memory"
+        }
+      },
+      "id": "c496df93-20a1-4f02-bbbf-fa787b0bdcb5",
+      "name": "Chat Trigger",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        864,
+        320
+      ],
+      "webhookId": "d6478b86-0a97-4ee7-85ed-5de6d026f88c"
+    },
+    {
+      "parameters": {},
+      "id": "c79b7556-a9a5-4dc0-867b-63cb4cd767aa",
+      "name": "wikipedia_search",
+      "type": "@n8n/n8n-nodes-langchain.toolWikipedia",
+      "typeVersion": 1,
+      "position": [
+        1344,
+        544
+      ]
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Use Gemini for in-depth research and web search. Provides AI-generated answers with context. Best for: current events, recent research, fact-checking, and general knowledge queries.",
+        "modelId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "models/gemini-2.5-pro"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "={{ $fromAI('query', 'Research query or question', 'string') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "8879c62a-7377-4a34-b95c-3c3efd4fea86",
+      "name": "gemini_web_research",
+      "type": "@n8n/n8n-nodes-langchain.googleGeminiTool",
+      "typeVersion": 1,
+      "position": [
+        1472,
+        544
+      ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "IacqnggMn3wW5IzJ",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "fd7dd041-9c30-4182-8327-8b54bbe8b53b",
+      "name": "calculator",
+      "type": "@n8n/n8n-nodes-langchain.toolCalculator",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        544
+      ]
+    },
+    {
+      "parameters": {
+        "description": "Execute Python code for ALL mathematical calculations (addition, subtraction, multiplication, division, exponents, roots, etc.), data processing, or algorithm testing. Automatically interprets natural language math expressions in any format and converts them to executable Python code. Handles: arithmetic, algebra, calculus, statistics, and more.",
+        "language": "python",
+        "pythonCode": "import re\nimport math\n\n# Parse the query to handle natural language math\nquery = _query.strip()\n\n# Try to evaluate as a math expression first\ntry:\n    # Replace common natural language patterns for ALL math operations\n    query = query.replace(\"×\", \"*\").replace(\"÷\", \"/\")\n    query = query.replace(\" times \", \"*\").replace(\" multiplied by \", \"*\")\n    query = query.replace(\" divided by \", \"/\").replace(\" over \", \"/\")\n    query = query.replace(\" plus \", \"+\").replace(\" add \", \"+\")\n    query = query.replace(\" minus \", \"-\").replace(\" subtract \", \"-\")\n    query = query.replace(\" to the power of \", \"**\").replace(\" squared\", \"**2\").replace(\" cubed\", \"**3\")\n    query = query.replace(\" percent\", \"/100\").replace(\"%\", \"/100\")\n    \n    # Handle \"what is\" and similar phrases\n    query = re.sub(r\"^(what is|what\\'s|calculate|compute|solve)\\s+\", \"\", query, flags=re.IGNORECASE)\n    query = re.sub(r\"\\s*\\?\\s*$\", \"\", query)  # Remove trailing question marks\n    \n    # Handle square root and other functions\n    query = re.sub(r\"square root of\\s+(\\d+)\", r\"math.sqrt(\\1)\", query, flags=re.IGNORECASE)\n    query = re.sub(r\"sqrt\\((\\d+)\\)\", r\"math.sqrt(\\1)\", query, flags=re.IGNORECASE)\n    \n    # If it looks like a simple math expression, evaluate it\n    if re.match(r\"^[\\d\\s+\\-*/().]+$\", query):\n        result = eval(query)\n        return f\"Result: {result}\"\n    # If it contains math functions, evaluate with math module\n    elif \"math.\" in query:\n        result = eval(query, {\"math\": math, \"__builtins__\": {}})\n        return f\"Result: {result}\"\n    else:\n        # Otherwise execute as Python code\n        exec_globals = {\"math\": math}\n        exec(query, exec_globals)\n        # Return the last expression or a success message\n        return exec_globals.get(\"result\", \"Code executed successfully\")\nexcept Exception as e:\n    return f\"Error: {str(e)}\""
+      },
+      "id": "701b2a3c-42e7-4f01-83bd-286a3e42da6c",
+      "name": "python_executor",
+      "type": "@n8n/n8n-nodes-langchain.toolCode",
+      "typeVersion": 1.3,
+      "position": [
+        1728,
+        544
+      ]
+    },
+    {
+      "parameters": {
+        "description": "Use this tool when you need to think through complex problems step-by-step, plan your approach, or reason about mathematical or programming concepts before providing a solution."
+      },
+      "id": "fde56472-f2a3-43dd-98d8-5e3028f4f972",
+      "name": "think",
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1.1,
+      "position": [
+        1856,
+        544
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Search the internal knowledge base for specialized information, documentation, or custom data that has been uploaded. Use this to retrieve specific facts, procedures, or information from the knowledge base.",
+        "memoryKey": {
+          "__rl": true,
+          "mode": "id",
+          "value": "vector_store_key"
+        },
+        "topK": 5
+      },
+      "id": "06b8c777-5785-4732-879d-f9875d739821",
+      "name": "knowledge_base",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "typeVersion": 1.3,
+      "position": [
+        1984,
+        544
+      ]
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Generate images using Gemini. Provide a detailed description of the image you want to create. Use this when users ask to create, generate, or visualize images.",
+        "resource": "image",
+        "modelId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "models/gemini-3-pro-image-preview"
+        },
+        "prompt": "={{ $fromAI('prompt', 'Detailed description of the image to generate', 'string') }}",
+        "options": {}
+      },
+      "id": "c3a872a3-ab62-486a-ab3d-ad981e1c25e0",
+      "name": "image_generator",
+      "type": "@n8n/n8n-nodes-langchain.googleGeminiTool",
+      "typeVersion": 1,
+      "position": [
+        2272,
+        544
+      ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "IacqnggMn3wW5IzJ",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Conversation Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Math & Code Agent",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "Chat Trigger",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Math & Code Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Embeddings": {
+      "ai_embedding": [
+        [
+          {
+            "node": "knowledge_base",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Math & Code Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "wikipedia_search": {
+      "ai_tool": [
+        [
+          {
+            "node": "Math & Code Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "gemini_web_research": {
+      "ai_tool": [
+        [
+          {
+            "node": "Math & Code Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "calculator": {
+      "ai_tool": [
+        [
+          {
+            "node": "Math & Code Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "python_executor": {
+      "ai_tool": [
+        [
+          {
+            "node": "Math & Code Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "think": {
+      "ai_tool": [
+        [
+          {
+            "node": "Math & Code Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "knowledge_base": {
+      "ai_tool": [
+        [
+          {
+            "node": "Math & Code Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "image_generator": {
+      "ai_tool": [
+        [
+          {
+            "node": "Math & Code Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionOrder": "v0",
+    "availableInMCP": false
+  },
+  "versionId": "a095cc94-c200-4bd9-8331-3c1d8178c859",
+  "meta": {
+    "templateId": "ready-to-run-ai-workflow",
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9b6b474c29f073d6c12eb1b938eaaa7d2720c71f5bf031e8fdc9654f2cabf057"
+  },
+  "id": "gCHGfINsHT21LurP",
+  "tags": []
+}
